@@ -13,7 +13,7 @@ Editable source: [docs/architecture.drawio](docs/architecture.drawio)
 | Stage | Choice | Why |
 |---|---|---|
 | 1. Data source | **USGS Earthquakes** (FDSN event API) | No API key, worldwide, updated every minute, and the same CSV format for history and live data, so one table and one parser serve both paths. |
-| 2. Ingestion | **GitHub Actions**, cron `*/15 * * * *` | Free for a public repo, version-controlled with the code, and runs when my laptop is off. 15 minutes instead of hourly gives several unattended runs per hour to prove liveness. |
+| 2. Ingestion | **GitHub Actions**, cron `7,22,37,52 * * * *` (every 15 min, off the busy :00 mark) | Free for a public repo, version-controlled with the code, and runs when my laptop is off. 15 minutes instead of hourly gives several unattended runs per hour to prove liveness. |
 | 3. Buffer | None (direct writes) | At ~20-40 quakes per run, a queue adds cost and moving parts without a benefit; the assignment allows direct writes at this volume. |
 | 4. Store | **Snowflake** (30-day trial, X-Small warehouse) | A widely used cloud warehouse; storage and compute are separate, the warehouse sleeps after 60 s, and `MERGE` gives clean upserts. Trial credit ($400) easily covers the one-week project. |
 | 5. Liveness | **Streamlit in Snowflake** | Runs next to the data with no extra account or credentials. (Snowflake removed its old built-in dashboards in 2026.) |
