@@ -1,0 +1,46 @@
+-- Step 1 of setup: compute, spending cap, database and tables.
+-- Run once in Snowflake as ACCOUNTADMIN.
+
+USE ROLE ACCOUNTADMIN;
+
+-- Small compute that turns itself off after 60 seconds of no work
+CREATE WAREHOUSE IF NOT EXISTS PIPELINE_WH
+  WAREHOUSE_SIZE = 'XSMALL' AUTO_SUSPEND = 60 AUTO_RESUME = TRUE INITIALLY_SUSPENDED = TRUE;
+
+-- Spending cap: stops the warehouse at 30 credits
+CREATE RESOURCE MONITOR IF NOT EXISTS PIPELINE_CAP
+  WITH CREDIT_QUOTA = 30 TRIGGERS ON 100 PERCENT DO SUSPEND;
+ALTER WAREHOUSE PIPELINE_WH SET RESOURCE_MONITOR = PIPELINE_CAP;
+
+CREATE DATABASE IF NOT EXISTS QUAKES;
+CREATE SCHEMA IF NOT EXISTS QUAKES.CORE;
+
+-- One row per earthquake
+CREATE TABLE IF NOT EXISTS QUAKES.CORE.EARTHQUAKES (
+  ID          STRING,         -- USGS's own ID, used to block duplicates
+  EVENT_TIME  TIMESTAMP_NTZ,  -- UTC
+  UPDATED_AT  TIMESTAMP_NTZ,  -- USGS sometimes corrects a quake later
+  LATITUDE    FLOAT,
+  LONGITUDE   FLOAT,
+  DEPTH_KM    FLOAT,
+  MAG         FLOAT,
+  MAG_TYPE    STRING,
+  PLACE       STRING,
+  EVENT_TYPE  STRING,
+  STATUS      STRING,
+  NET         STRING,
+  SOURCE      STRING,         -- 'seed' (old data) or 'live' (hourly job)
+  LOADED_AT   TIMESTAMP_NTZ DEFAULT SYSDATE()
+);
+
+-- One row per hourly run, to prove it's alive and to find gaps later
+CREATE TABLE IF NOT EXISTS QUAKES.CORE.INGEST_RUNS (
+  RUN_AT    TIMESTAMP_NTZ DEFAULT SYSDATE(),
+  FETCHED   INT,
+  INSERTED  INT,
+  UPDATED   INT,
+  STATUS    STRING,
+  MESSAGE   STRING
+);
+
+SHOW TABLES IN SCHEMA QUAKES.CORE;

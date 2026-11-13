@@ -1,0 +1,13 @@
+# Secrets: never commit keys or env files
+*.p8
+*.pem
+*.key
+.env
+.env.*
+
+# Historical downloads stay on disk, not in git
+data/
+
+# Python
+__pycache__/
+.venv/
