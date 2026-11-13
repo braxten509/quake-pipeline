@@ -1,0 +1,40 @@
+<mxfile host="drawio">
+  <diagram id="arch" name="Architecture">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" page="1" pageWidth="1360" pageHeight="420">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="usgs" value="&lt;b&gt;USGS Earthquake API&lt;/b&gt;&lt;br&gt;(FDSN event service)&lt;br&gt;worldwide, updates every minute" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;spacing=8;strokeWidth=1.5;fillColor=#dae8fc;strokeColor=#6c8ebf;">
+          <mxGeometry x="20" y="140" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="pc" value="&lt;b&gt;Your PC: one-time seed&lt;/b&gt;&lt;br&gt;download_history.py&lt;br&gt;&amp;#8594; data/raw (61 monthly CSVs)&lt;br&gt;&amp;#8594; load_history.py&lt;br&gt;&lt;i&gt;744,087 quakes, Nov 2021 &amp;#8211; now&lt;/i&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;spacing=8;strokeWidth=1.5;fillColor=#fff2cc;strokeColor=#d6b656;">
+          <mxGeometry x="400" y="20" width="270" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="gha" value="&lt;b&gt;GitHub Actions: every 15 min&lt;/b&gt;&lt;br&gt;ingest_live.py&lt;br&gt;key-pair login from&lt;br&gt;GitHub Secrets" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;spacing=8;strokeWidth=1.5;fillColor=#d5e8d4;strokeColor=#82b366;">
+          <mxGeometry x="400" y="240" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sf" value="&lt;b&gt;Snowflake&lt;/b&gt; (trial)&lt;br&gt;warehouse PIPELINE_WH&lt;br&gt;X-Small, auto-suspend 60 s, 30-credit cap&lt;br&gt;&lt;br&gt;&lt;b&gt;QUAKES.CORE.EARTHQUAKES&lt;/b&gt;&lt;br&gt;&lt;b&gt;QUAKES.CORE.INGEST_RUNS&lt;/b&gt;&lt;br&gt;&lt;br&gt;MERGE on USGS ID = no duplicates" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;spacing=8;strokeWidth=1.5;fillColor=#e1d5e7;strokeColor=#9673a6;">
+          <mxGeometry x="780" y="90" width="290" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="st" value="&lt;b&gt;Streamlit in Snowflake&lt;/b&gt;&lt;br&gt;&amp;#8220;Is it alive?&amp;#8221; dashboard&lt;br&gt;new quakes per run,&lt;br&gt;today vs 5-year average" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;spacing=8;strokeWidth=1.5;fillColor=#f8cecc;strokeColor=#b85450;">
+          <mxGeometry x="1160" y="140" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="once: 1 month&lt;br&gt;per request" edge="1" parent="1" source="usgs" target="pc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;endArrow=block;strokeWidth=1.5;labelBackgroundColor=#ffffff;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="every run: quakes updated&lt;br&gt;since newest row &amp;#8722; 1 h" edge="1" parent="1" source="usgs" target="gha" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;endArrow=block;strokeWidth=1.5;labelBackgroundColor=#ffffff;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="bulk MERGE" edge="1" parent="1" source="pc" target="sf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;endArrow=block;strokeWidth=1.5;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="MERGE + log run" edge="1" parent="1" source="gha" target="sf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;endArrow=block;strokeWidth=1.5;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="SQL queries" edge="1" parent="1" source="sf" target="st" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;endArrow=block;strokeWidth=1.5;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
