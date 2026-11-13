@@ -97,11 +97,11 @@ with left:
     st.dataframe(q(f"""
         SELECT EVENT_TIME, MAG, PLACE, SOURCE, LOADED_AT
         FROM {DB}.EARTHQUAKES ORDER BY EVENT_TIME DESC LIMIT 15
-    """), hide_index=True, use_container_width=True)
+    """), hide_index=True, width="stretch")
 
 with right:
     st.subheader("Run log")
     st.dataframe(q(f"""
         SELECT RUN_AT, FETCHED, INSERTED, UPDATED, STATUS, MESSAGE
         FROM {DB}.INGEST_RUNS ORDER BY RUN_AT DESC LIMIT 20
-    """), hide_index=True, use_container_width=True)
+    """), hide_index=True, width="stretch")
