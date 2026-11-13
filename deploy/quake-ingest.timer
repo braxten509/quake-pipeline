@@ -1,0 +1,12 @@
+# Runs quake-ingest.service every 15 minutes (:00, :15, :30, :45).
+# Persistent=true: if the PC was asleep or off at a run time, run once right after it wakes.
+[Unit]
+Description=Quake pipeline every 15 minutes
+
+[Timer]
+OnCalendar=*:00/15
+AccuracySec=10s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

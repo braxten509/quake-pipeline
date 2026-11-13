@@ -48,7 +48,7 @@ with left:
         FROM {DB}.INGEST_RUNS WHERE STATUS <> 'seed' ORDER BY RUN_AT
     """)
     st.bar_chart(runs, x="RUN_AT", y="NEW_QUAKES")
-    st.caption("Each bar is one run of the 15-minute GitHub Actions job (times in UTC).")
+    st.caption("Each bar is one run of the 15-minute cron job on my PC (times in UTC).")
 
 with right:
     st.subheader("Today vs 5-year average, by hour (UTC)")

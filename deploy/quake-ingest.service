@@ -1,0 +1,14 @@
+# One run of the live job. Started every 15 minutes by quake-ingest.timer.
+# Login settings (account, user, path to the private key) live in a private file
+# outside the repo: ~/.config/quake-pipeline.env (KEY=value lines).
+[Unit]
+Description=Quake pipeline: pull new USGS quakes into Snowflake
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/.config/quake-pipeline.env
+WorkingDirectory=%h/Documents/CS452/quake-pipeline
+ExecStart=%h/Documents/CS452/quake-pipeline/.venv/bin/python -u -W ignore::FutureWarning scripts/ingest_live.py
+TimeoutStartSec=10min

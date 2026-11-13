@@ -1,10 +1,9 @@
-# Pulls new USGS earthquakes into Snowflake every 15 minutes.
-# GitHub may start scheduled runs a few minutes late when it is busy.
+# Manual-only copy of the live job ("Run workflow" button on GitHub).
+# The real 15-minute schedule is a systemd timer on my PC: see deploy/.
+# GitHub's own schedule never fired on this new repo, so it was turned off.
 name: Ingest live quakes
 
 on:
-  schedule:
-    - cron: "7,22,37,52 * * * *" # every 15 min, off the busy :00 mark
   workflow_dispatch: # "Run workflow" button for manual runs
 
 concurrency:
