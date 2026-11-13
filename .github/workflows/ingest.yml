@@ -4,7 +4,7 @@ name: Ingest live quakes
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *" # every 15 min, off the busy :00 mark
   workflow_dispatch: # "Run workflow" button for manual runs
 
 concurrency:
